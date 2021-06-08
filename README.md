@@ -12,6 +12,8 @@ Adds basic language support for AssemblyScript by hooking into the TypeScript La
 
 ## Usage
 
+Install the plugin: `npm i -D assemblyscript-language-plugin`.
+
 Add the plugin to your `tsconfig.json` under `compilerOptions.plugins`:
 
 ```json
