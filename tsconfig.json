@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext", "dom"]
+  },
+  "include": ["./src/**/*", "index.ts"]
+}
