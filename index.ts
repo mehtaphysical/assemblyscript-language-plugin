@@ -1,4 +1,4 @@
-import { createMemoryStream, main } from "assemblyscript/cli/asc";
+import { main } from "assemblyscript/cli/asc";
 import { DiagnosticMessage } from "assemblyscript";
 import { Diagnostic } from "typescript";
 
@@ -35,17 +35,22 @@ function init(modules: {
           });
         };
         main(
-          ["--runtime", "stub", entry],
+          ["--runtime", "stub", "--noEmit", entry],
           {
-            stdout: createMemoryStream(),
-            stderr: createMemoryStream(),
             reportDiagnostic,
             readFile(fileName, baseDir) {
-              if (fileName.endsWith("asconfig.json")) return null;
+              if (fileName.endsWith("asconfig.json")) {
+                return info.project.readFile(`${baseDir}/${fileName}`) || null;
+              }
+
+              if (fileName.includes("node_modules")) {
+                return info.project.readFile(fileName) || null;
+              }
 
               const path = baseDir.startsWith("/")
                 ? baseDir
                 : `${root}/${baseDir}`;
+
               return info.project.readFile(`${path}/${fileName}`) || null;
             },
             writeFile() {},

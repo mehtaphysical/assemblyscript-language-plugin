@@ -33,16 +33,21 @@ function init(modules) {
                         messageText: d.message
                     });
                 };
-                asc_1.main(["--runtime", "stub", entry], {
-                    stdout: asc_1.createMemoryStream(),
-                    stderr: asc_1.createMemoryStream(),
+                asc_1.main(["--runtime", "stub", "--noEmit", entry], {
                     reportDiagnostic: reportDiagnostic,
                     readFile: function (fileName, baseDir) {
-                        if (fileName.endsWith("asconfig.json"))
-                            return null;
+                        if (fileName.endsWith("asconfig.json")) {
+                            console.log("READING: ", "" + fileName, info.project.readFile(baseDir + "/" + fileName));
+                            return info.project.readFile(baseDir + "/" + fileName);
+                        }
+                        if (fileName.includes("node_modules")) {
+                            console.log("READING: ", "" + fileName, info.project.readFile("" + fileName));
+                            return info.project.readFile("" + fileName) || null;
+                        }
                         var path = baseDir.startsWith("/")
                             ? baseDir
                             : root + "/" + baseDir;
+                        console.log("READING: ", path + " /// " + fileName, info.project.readFile(path + "/" + fileName));
                         return info.project.readFile(path + "/" + fileName) || null;
                     },
                     writeFile: function () { }
